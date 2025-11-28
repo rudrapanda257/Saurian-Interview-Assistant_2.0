@@ -1,0 +1,74 @@
+{
+  "name": "angel-ai-assistant",
+  "version": "1.0.0",
+  "description": "AI-powered Meeting Assistant that provides real-time answers during meetings",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-builder",
+    "build-mac": "electron-builder --mac",
+    "build-win": "electron-builder --win",
+    "build-macarm": "electron-builder --mac --arm64",
+    "build-all": "sh ./build-all.sh",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "author": "Lazy Job Seeker",
+  "license": "ISC",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.70.1",
+    "@electron/remote": "^2.1.3",
+    "@google-cloud/speech": "^7.0.1",
+    "@google-cloud/text-to-speech": "^5.0.1",
+    "@google/generative-ai": "^0.24.1",
+    "@ricky0123/vad-web": "^0.0.30",
+    "axios": "^1.8.4",
+    "node-record-lpcm16": "^0.3.1",
+    "openai": "^4.24.1"
+  },
+  "devDependencies": {
+    "@electron/notarize": "^3.0.1",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.lazyjobseeker.angel",
+    "productName": "Sauriann AI Meeting Assistant",
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "assets/icons/icon.icns",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "icon": "assets/icons/icon.ico",
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "files": [
+      "**/*",
+      "!lazy-job-seeker-4b29b-eb0b308d0ba7.json"
+    ],
+    "extraResources": [
+      {
+        "from": "lazy-job-seeker-4b29b-eb0b308d0ba7.json",
+        "to": "lazy-job-seeker-4b29b-eb0b308d0ba7.json"
+      }
+    ],
+    "asarUnpack": [
+      "node_modules/@google-cloud/text-to-speech/**/*",
+      "node_modules/@google-cloud/speech/**/*",
+      "node_modules/node-record-lpcm16/**/*"
+    ],
+    "afterSign": "",
+    "publish": null
+  }
+}
