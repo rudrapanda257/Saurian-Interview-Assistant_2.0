@@ -37,8 +37,7 @@ let isInScreenSharingMode = false;
 // GOOGLE GEMINI API CONFIGURATION (FREE!)
 // Get your free API key from: https://aistudio.google.com/app/apikey
 // ============================================
-//const GEMINI_API_KEY = 'AIzaSyCOTaXXAW7wjXr2giXBEt488dDy6GZoCoE'; // ← PUT YOUR NEW API KEY HERE
-const GEMINI_API_KEY = 'AIzaSyD3REHqWZjdrsQwfQAXh6PkEAG42oUFQyk'; // ← PUT YOUR NEW API KEY HERE
+const GEMINI_API_KEY = 'Your_API_KEY'; // ← PUT YOUR NEW API KEY HERE
 
 
 
