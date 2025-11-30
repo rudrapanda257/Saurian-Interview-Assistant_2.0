@@ -37,7 +37,7 @@ let isInScreenSharingMode = false;
 // GOOGLE GEMINI API CONFIGURATION (FREE!)
 // Get your free API key from: https://aistudio.google.com/app/apikey
 // ============================================
-const GEMINI_API_KEY = 'Your_API_KEY'; // ← PUT YOUR NEW API KEY HERE
+const GEMINI_API_KEY = ''; // ← PUT YOUR NEW API KEY HERE
 
 
 
@@ -284,6 +284,7 @@ ipcMain.on('stream-audio-chunk', async (event, audioChunk) => {
 // ===========================================
 async function getGeminiAnswer(transcript, imageData = null, history = []) {
   try {
+
     // Build a compact conversation context from history (keep it small if very long)
     let conversationContext = '';
     try {
@@ -328,43 +329,120 @@ async function getGeminiAnswer(transcript, imageData = null, history = []) {
     const modelName = "gemini-2.0-flash";
     const model = genAI.getGenerativeModel({ model: modelName });
 
-    let result;
-    if (imageData) {
-      // if imageData present, keep your existing behavior but include finalQuestion in textPart
-      const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
-      let mimeType = 'image/png';
-      if (imageData.startsWith('data:image/jpeg') || imageData.startsWith('data:image/jpg')) mimeType = 'image/jpeg';
-      else if (imageData.startsWith('data:image/webp')) mimeType = 'image/webp';
-      else if (imageData.startsWith('data:image/gif')) mimeType = 'image/gif';
+   let result;
+if (imageData) {
+  // ====================================
+  // IMAGE/SCREENSHOT ANALYSIS
+  // ====================================
+  const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
+  let mimeType = 'image/png';
+  if (imageData.startsWith('data:image/jpeg') || imageData.startsWith('data:image/jpg')) mimeType = 'image/jpeg';
+  else if (imageData.startsWith('data:image/webp')) mimeType = 'image/webp';
+  else if (imageData.startsWith('data:image/gif')) mimeType = 'image/gif';
 
-      const imagePart = {
-        inlineData: { data: base64Data, mimeType }
-      };
+  const imagePart = {
+    inlineData: { data: base64Data, mimeType }
+  };
 
-      const textPart = {
-        text: `You are a helpful AI coding assistant. Analyze this image carefully.\n\nQuestion: ${finalQuestion}\n\nFormat your response with proper markdown for better readability.`
-      };
+  const textPart = {
+    text: `You are an interview preparation assistant analyzing a screenshot.
 
-      result = await model.generateContent([textPart, imagePart]);
-    } else {
-      // Text only — include conversation context
-      const prompt = `You are a helpful AI assistant that provides clear, well-formatted responses.
+RESPONSE RULES:
+1. If it's a coding/DSA question: Provide FULL working Java code first in a code block
+2. Include time/space complexity analysis for algorithms
+3. Structure answer in bullet points
+4. Add step-by-step explanation after code
+5. Use simple, speakable language
+6. End with "Key Points" summary
 
-When providing CODE in your answer:
-- Always use proper markdown code blocks with language specification
-- Format: \`\`\`language
-  code here
-  \`\`\`
+Question: ${finalQuestion}
 
-When explaining concepts:
-- Be clear and concise (2-4 sentences)
+Provide complete code solution with detailed explanation.`
+  };
+
+  result = await model.generateContent([textPart, imagePart]);
+} else {
+  // ====================================
+  // TEXT-BASED QUESTIONS
+  // ====================================
+  
+  // Detect if it's an interview question
+  const interviewKeywords = [
+  'interview', 'explain', 'difference between', 'what is', 
+  'how does', 'tell me about', 'describe', 'implement', 
+  'solve', 'algorithm', 'code', 'program', 'reverse', 'write',
+  'find', 'search', 'sort', 'calculate', 'design', 'create',
+  'build', 'optimize', 'problem', 'question', 'approach'
+];
+
+// Check if it's a coding problem (needs full code solution)
+const codingProblemKeywords = ['solve', 'implement', 'write', 'code', 'reverse', 'find', 'search', 'sort', 'algorithm', 'problem'];
+const isCodingProblem = codingProblemKeywords.some(keyword => 
+  finalQuestion.toLowerCase().includes(keyword)
+);
+
+const isInterviewQuestion = interviewKeywords.some(keyword => 
+  finalQuestion.toLowerCase().includes(keyword)
+);
+  
+  let systemPrompt;
+  
+  if (isInterviewQuestion) {
+  systemPrompt = `You are an interview preparation assistant. Help someone answer questions naturally and confidently.
+
+${isCodingProblem ? `
+CODING PROBLEM FORMAT (STRICT):
+1. **Approach/Algorithm** (2-3 bullet points explaining the logic)
+2. **Complete Working Java Code** (full solution in one code block)
+3. **Code Explanation** (explain key parts line-by-line)
+4. **Time & Space Complexity** (Big O notation)
+5. **Key Points to Remember** (2-3 takeaways)
+` : ''}
+
+RESPONSE STYLE:
+- Write each bullet point as a COMPLETE SENTENCE that flows naturally when spoken
+- Use simple, everyday language - avoid jargon unless necessary
+- Structure everything in bullet points, but make each point feel like a full thought
+- Bold (**text**) key terms for quick scanning
+- Keep it conversational and professional
+
+CRITICAL RULES - MUST FOLLOW:
+- Write the answer AS IF THE CANDIDATE IS SPEAKING in first person
+- Use "I", "my", "mine" - NEVER "you", "your", "yours"
+- Wrong: "You put the code in a try block"
+- Correct: "I put the code in a try block"
+- Wrong: "You handle errors using..."
+- Correct: "I handle errors using..."
+
+LANGUAGE STYLE:
+- Use conversational words: "So" not "Therefore", "But" not "However", "Also" not "Moreover"
+- Use simple verbs: "Use" not "Utilize", "Start" not "Commence", "Show" not "Demonstrate"
+- Speak naturally: "I think it's better to..." not "It is recommended"
+
+BULLET POINT RULES:
+- Each point should be 1-2 complete sentences (not just keywords)
+- Should read like someone speaking in an interview
+- Example: "Polymorphism means one method can behave in different ways depending on the object that calls it."
+- NOT: "Polymorphism - multiple forms"
 
 ${finalQuestion}
 
-Provide a helpful, well-formatted answer.`;
-      result = await model.generateContent(prompt);
-    }
+Provide interview-ready answer with full sentences in bullet format.`;
+}else {
+    // ====================================
+    // REGULAR CONVERSATIONAL PROMPT
+    // ====================================
+    systemPrompt = `You are a helpful AI assistant. Be brief, natural, and use bullet points when helpful.
 
+${finalQuestion}
+
+Provide a clear, concise answer.`;
+  }
+  
+  result = await model.generateContent(systemPrompt);
+}
+
+    //stop here
     const response = await result.response;
     const answer = response.text();
 
@@ -459,11 +537,12 @@ ipcMain.on('capture-screenshot', async (event) => {
 // Handle screenshot with question
 ipcMain.on('screenshot-with-question', async (event, data) => {
   console.log('Received screenshot with question:', data.question);
+  const history = data.history || [];
   
   if (mainWindow && !mainWindow.isDestroyed()) {
     try {
       mainWindow.webContents.send('answer-status', 'Analyzing screenshot with Gemini...');
-      await getGeminiAnswer(data.question, data.screenshot);
+      await getGeminiAnswer(data.question, data.screenshot, history);
     } catch (error) {
       console.error('Error processing screenshot with question:', error);
       mainWindow.webContents.send('screenshot-answer', 'Error analyzing screenshot. Please try again.');

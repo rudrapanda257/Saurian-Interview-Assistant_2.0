@@ -938,7 +938,7 @@
         .message-content {
             padding: 0.6rem 0.8rem;
             border-radius: var(--radius);
-            max-width: 80%;
+            max-width: 90%;
             word-wrap: break-word;
             box-shadow: var(--shadow-sm);
             font-size: 0.85rem;
@@ -1834,12 +1834,13 @@
 
 <!-- Quick Action Suggestions -->
 <div id="quickSuggestions" class="quick-suggestions hidden">
+    <button class="suggestion-chip" data-action="Explain this in short like you explain someone">🤏🏻 Short</button>
     <button class="suggestion-chip" data-action="Solve the question">✓ Solve</button>
-    <button class="suggestion-chip" data-action="Solve the question">☕ Java</button>
+    <button class="suggestion-chip" data-action="Solve the question in java">☕ Java</button>
     <button class="suggestion-chip" data-action="Explain this in detail">📖 Explain</button>
-    <button class="suggestion-chip" data-action="Chose the correct option from the question in image">👆🏻 option</button>
+    <button class="suggestion-chip" data-action="Explain this easy/simple word so that anyone can Understand">👨🏻 Human..</button>
     <button class="suggestion-chip" data-action="Fix the error in this code">🔧Fix it</button>
-    <button class="suggestion-chip" data-action="Explain this in short">🤏🏻 Short</button>
+    
 </div>
                 
                 <div id="statusText" class="status-text">
@@ -1927,7 +1928,7 @@ if (!isUser) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
     
-    messages.push({ text, isUser, screenshotData });
+    messages.push({ text, isUser, screenshotData: screenshotData || null });
     
     // Apply syntax highlighting to code blocks
     setTimeout(() => {
@@ -2295,6 +2296,17 @@ systemButton.addEventListener('click', async () => {
                  event.preventDefault();
                  ipcRenderer.send('toggle-maximize');
              }
+             if (event.key === '1') {
+                 event.preventDefault();
+                 textInput.value = 'Explain this in short';
+                 sendTextMessage();
+                }
+            if (event.key === '2') {
+                    event.preventDefault();
+                    textInput.value = 'Solve the question';
+                    sendTextMessage();
+                    }
+
 
         });
 
@@ -2382,7 +2394,7 @@ systemButton.addEventListener('click', async () => {
             
             if (isHideMode) {
                 indicator.style.display = 'flex';
-                indicator.innerHTML = '🖥️ Hiding from Screen Capture...';
+                indicator.innerHTML = '🖥️ Hiding..';
                 console.log('Requested screen sharing hide mode');
             } else {
                 indicator.style.display = 'none';
@@ -2554,7 +2566,8 @@ document.addEventListener('keydown', (event) => {
                     // Send screenshot + text to main process
                     ipcRenderer.send('screenshot-with-question', {
                         screenshot: window.pendingScreenshot,
-                        question: text
+                        question: text,
+                        history: messages 
                     });
                     
                     delete window.pendingScreenshot;
