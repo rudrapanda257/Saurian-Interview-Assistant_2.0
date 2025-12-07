@@ -933,6 +933,7 @@
         
         .message-ai {
             justify-content: flex-start;
+            margin-bottom: 9rem;
         }
         
         .message-content {
@@ -982,6 +983,21 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
             border-radius: var(--radius-sm) var(--radius) var(--radius) var(--radius-sm);
             border-left: 4px solid var(--success);
+
+    /* ✅ Horizontal scroll support */
+    overflow-x: auto;
+    overflow-y: visible;
+    
+    /* ✅ Perfect reading width */
+    width: 85%;           /* Consistent width */
+    max-width: 900px;     /* Not too wide on big screens */
+    min-width: 300px;     /* Not too narrow on small screens */
+    
+    /* ✅ Comfortable padding */
+    padding: 1rem 1.5rem;
+    
+    /* ✅ Smooth scroll */
+    scroll-behavior: smooth;
         }
         
         /* Screenshot preview in messages */
@@ -1771,9 +1787,75 @@
             <div class="chat-messages" id="chatMessages">
                 <!-- Welcome message -->
                 <div class="message message-ai">
-                    <div class="message-content">
-                        Hello! I'm your AI meeting assistant. Use voice, text, or screenshot to ask questions.
-                    </div>
+                  <div class="message-content">
+    <p>
+        Good morning/afternoon! Thank you for this opportunity. My name is <strong>Rudra Narayan Panda</strong>, I an from Bangaluru and I'm a recent graduate with a strong interest in full-stack development.
+    </p>
+    <p>
+        Over the past 10 months, I've gained practical experience through internship and one freelance project, where I've worked with technologies like React, Next.js, Node.js, REST Api, Spring Boot, JPA/Hibernet and databases like MySQL and MongoDB. I enjoy building complete applications from scratch and solving real-world problems through code.
+    </p>
+    
+    <br>
+    <hr>
+    <br>
+    
+    <h3>💼 EXPERIENCE OVERVIEW </h3>
+    <p>
+        Talking about my experience briefly.
+    </p>
+    
+    <p>
+        <strong>Most recently</strong>, from July to October this year, I completed a Java Full-Stack Development course at <strong>Kodnest Technologies</strong> in Bengaluru, where I learned Java, Spring Boot, spring MVC, JPA/Hibernet MySQL, and worked on live projects. This hands-on training helped me understand the complete development lifecycle and build my TripEase project using Spring Boot.
+    </p>
+    
+    <p>
+        <strong>Before that</strong>, from February to May this, I worked as a Freelance Full-Stack Developer for a company called <strong>VAUT</strong> based in New York. This was an exciting project where I built an AI-powered interview practice application for sales and marketing roles.
+    </p>
+    
+    <p>
+        I built the entire application using Next.js and TypeScript for the frontend, integrated Claude API for AI-based answer evaluation, set up Google OAuth for user login, and used MongoDB for storing questions. I handled everything from design to deployment on Vercel. This project really tested my ability to work independently and integrate different technologies together.
+    </p>
+    
+    <p>
+        <strong>My first experience</strong> was from August 2024 to January 2025 as a React Developer Intern at <strong>ADM Education & Welfare Society</strong> in Gurugram. I developed multiple sections of their website using React and TailwindCSS, worked with the team using Git and GitHub, and deployed the site on Vercel. This taught me how to work in a team environment with code reviews and proper version control.
+    </p>
+    
+    <br>
+    <hr>
+    <br>
+    
+    <h3>🚀 PROJECT HIGHLIGHT </h3>
+    <p>
+        Building on these experiences, I recently completed my main project called <strong>TripEase</strong> - it's a cab booking system similar to Uber, built using Spring Boot.
+    </p>
+    
+    <p>
+        The application manages customers, drivers, and bookings. When a customer books a ride, the system automatically finds an available cab, assigns it, calculates the fare based on distance, and manages the entire booking process.
+    </p>
+    
+    <p>
+        I designed it using a three-tier architecture with Controllers, Services, and Repositories. I used DTOs to keep the API layer separate from the database, which makes the code cleaner and easier to maintain. The database has proper relationships between customers, drivers, cabs, and bookings.
+    </p>
+    
+    <p>
+        Some key features include automatic cab assignment using custom queries, dynamic fare calculation, and various filters to search customers or drivers. I containerized it using Docker and deployed it on Render cloud platform.
+    </p>
+    
+    <p>
+        This project helped me strengthen my backend development skills and understand how to build scalable applications.
+    </p>
+    
+    <br>
+    <hr>
+    <br>
+    
+    <h3>✅ CLOSING</h3>
+    <p>
+        Overall, I have hands-on experience with both frontend technologies like React and Next.js, and backend with Spring Boot. I'm comfortable working independently as well as in teams, and I'm really eager to learn and contribute to real projects.
+    </p>
+
+    <br>
+                  </div>
                 </div>
             </div>
             
@@ -1837,8 +1919,8 @@
     <button class="suggestion-chip" data-action="Explain this in short like you explain someone">🤏🏻 Short</button>
     <button class="suggestion-chip" data-action="Solve the question">✓ Solve</button>
     <button class="suggestion-chip" data-action="Solve the question in java">☕ Java</button>
-    <button class="suggestion-chip" data-action="Explain this in detail">📖 Explain</button>
-    <button class="suggestion-chip" data-action="Explain this easy/simple word so that anyone can Understand">👨🏻 Human..</button>
+    <button class="suggestion-chip" data-action="Explain this in detail">📖 Detail</button>
+    <button class="suggestion-chip" data-action="Give a example of this">⭐ Example</button>
     <button class="suggestion-chip" data-action="Fix the error in this code">🔧Fix it</button>
     
 </div>
@@ -2296,7 +2378,7 @@ systemButton.addEventListener('click', async () => {
                  event.preventDefault();
                  ipcRenderer.send('toggle-maximize');
              }
-             if (event.key === '1') {
+             if (event.key === 'Shift') {
                  event.preventDefault();
                  textInput.value = 'Explain this in short';
                  sendTextMessage();
