@@ -1011,6 +1011,49 @@
         .message-screenshot:hover {
             transform: scale(1.05);
         }
+
+        /* Enhanced bold highlighting for quick scanning */
+.message.assistant strong {
+    color: #ffd700 !important;  /* Bright yellow */
+    font-size: 1.15em;
+    font-weight: 800;
+    background: rgba(255, 215, 0, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    margin: 0 2px;
+}
+
+/* Icon styling in messages */
+.message.assistant li {
+    margin: 12px 0;  /* More spacing between points */
+    line-height: 1.8;
+    font-size: 0.95rem;
+}
+
+/* Table styling for comparisons */
+.message.assistant table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.message.assistant table th {
+    background: rgba(99, 102, 241, 0.3);
+    padding: 10px;
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.message.assistant table td {
+    padding: 8px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.message.assistant table strong {
+    color: #a5b4fc;
+}
         
         /* Update live transcript styling for new position */
         .live-transcript {
@@ -1787,75 +1830,82 @@
             <div class="chat-messages" id="chatMessages">
                 <!-- Welcome message -->
                 <div class="message message-ai">
-                  <div class="message-content">
+<div class="message-content">
     <p>
-        Good morning/afternoon! Thank you for this opportunity. My name is <strong>Rudra Narayan Panda</strong>, I an from Bangaluru and I'm a recent graduate with a strong interest in full-stack development.
-    </p>
-    <p>
-        Over the past 10 months, I've gained practical experience through internship and one freelance project, where I've worked with technologies like React, Next.js, Node.js, REST Api, Spring Boot, JPA/Hibernet and databases like MySQL and MongoDB. I enjoy building complete applications from scratch and solving real-world problems through code.
+        Hello, I'm <strong>Rudra Narayan Panda</strong>, a Java Full-Stack Developer with over three years of experience building scalable enterprise applications. I'm currently at <strong>Capillary Technologies</strong> in Bengaluru, where I specialize in microservices architecture using Java, Spring Boot, and React.
     </p>
     
     <br>
     <hr>
-    <br>
-    
-    <h3>💼 EXPERIENCE OVERVIEW </h3>
-    <p>
-        Talking about my experience briefly.
-    </p>
-    
-    <p>
-        <strong>Most recently</strong>, from July to October this year, I completed a Java Full-Stack Development course at <strong>Kodnest Technologies</strong> in Bengaluru, where I learned Java, Spring Boot, spring MVC, JPA/Hibernet MySQL, and worked on live projects. This hands-on training helped me understand the complete development lifecycle and build my TripEase project using Spring Boot.
-    </p>
-    
-    <p>
-        <strong>Before that</strong>, from February to May this, I worked as a Freelance Full-Stack Developer for a company called <strong>VAUT</strong> based in New York. This was an exciting project where I built an AI-powered interview practice application for sales and marketing roles.
-    </p>
-    
-    <p>
-        I built the entire application using Next.js and TypeScript for the frontend, integrated Claude API for AI-based answer evaluation, set up Google OAuth for user login, and used MongoDB for storing questions. I handled everything from design to deployment on Vercel. This project really tested my ability to work independently and integrate different technologies together.
-    </p>
-    
-    <p>
-        <strong>My first experience</strong> was from August 2024 to January 2025 as a React Developer Intern at <strong>ADM Education & Welfare Society</strong> in Gurugram. I developed multiple sections of their website using React and TailwindCSS, worked with the team using Git and GitHub, and deployed the site on Vercel. This taught me how to work in a team environment with code reviews and proper version control.
-    </p>
-    
-    <br>
-    <hr>
-    <br>
-    
-    <h3>🚀 PROJECT HIGHLIGHT </h3>
-    <p>
-        Building on these experiences, I recently completed my main project called <strong>TripEase</strong> - it's a cab booking system similar to Uber, built using Spring Boot.
-    </p>
-    
-    <p>
-        The application manages customers, drivers, and bookings. When a customer books a ride, the system automatically finds an available cab, assigns it, calculates the fare based on distance, and manages the entire booking process.
-    </p>
-    
-    <p>
-        I designed it using a three-tier architecture with Controllers, Services, and Repositories. I used DTOs to keep the API layer separate from the database, which makes the code cleaner and easier to maintain. The database has proper relationships between customers, drivers, cabs, and bookings.
-    </p>
-    
-    <p>
-        Some key features include automatic cab assignment using custom queries, dynamic fare calculation, and various filters to search customers or drivers. I containerized it using Docker and deployed it on Render cloud platform.
-    </p>
-    
-    <p>
-        This project helped me strengthen my backend development skills and understand how to build scalable applications.
-    </p>
-    
-    <br>
-    <hr>
-    <br>
-    
-    <h3>✅ CLOSING</h3>
-    <p>
-        Overall, I have hands-on experience with both frontend technologies like React and Next.js, and backend with Spring Boot. I'm comfortable working independently as well as in teams, and I'm really eager to learn and contribute to real projects.
-    </p>
+     
 
+    
+        <h3>💼 CURRENT ROLE & EXPERTISE</h3>
+    <p>
+        At Capillary Technologies, I focus on developing robust, scalable solutions that drive real business value. My work revolves around microservices architecture, modern frontend frameworks, and building systems that can handle enterprise-scale demands.
+    </p>
+    
+    <p>
+        My core technical expertise includes:
+    </p>
+    <ul>
+        <li><strong>Backend:</strong> Java, Spring Boot, Microservices Architecture, RESTful APIs</li>
+        <li><strong>Frontend:</strong> React.js, Redux Toolkit, Tailwind CSS</li>
+        <li><strong>Messaging & Events:</strong> Apache Kafka for event-driven communication</li>
+        <li><strong>Service Discovery:</strong> Eureka, Centralized Configuration Management</li>
+        <li><strong>Security:</strong> JWT Authentication, Role-Based Access Control (RBAC)</li>
+        <li><strong>DevOps:</strong> Docker for containerization, Kubernetes for orchestration</li>
+    </ul>
+    
     <br>
-                  </div>
+    <hr>
+    <br>
+    
+    <h3>🚀 KEY PROJECT HIGHLIGHT</h3>
+<p>
+    In my current role, we <strong>architected and developed a enterprise project management platform from the ground up. </strong>. This was a comprehensive system designed to streamline project tracking, task management, and team collaboration at scale.
+</p>
+
+<p><strong>Microservices Architecture:</strong></p>
+<ul>
+    <li>Used different design partterns while integrating microservices</li>
+    <!-- <li><strong>Api gateway partterns</strong> - routing, Authentication</li> -->
+    <li><strong>service discovery parttern</strong> - Implemented Eureka Service Discovery for dynamic service registration</li>
+    <li><strong>Singleton Pattern </strong> </li>
+    <li><strong>Circuit Breaker pattern</strong> - Implemented to prevent cascading failures/fault tolerance in distributed systems</li>
+    <li><strong>Asynchronous Communication parttern</strong> -Event-driven communication using Apache Kafka for real-time updates and loose coupling</li>
+    <li><strong>Handles Distributed Transaction Scenario</strong> to achieve data consistency</li>
+    <li><strong>Performance Optimization</strong> reduced our API response times by approximately 50% through query optimization, proper indexing,using Concurrent HashMap programming and implementing caching strategies.</li>
+</ul>
+
+<p><strong>API Security:</strong></p>
+<ul>
+    <li><strong>Token-Based Security Pattern -</strong> Secured over 40 RESTful APIs using JWT authentication</li>
+    <li>Implemented comprehensive role-based access control (RBAC)</li>
+</ul>
+
+<p><strong>Frontend Development:</strong></p>
+<ul>
+    <li>Built complex user interfaces with React.js & React Hooks</li>
+    <li>Efficient state management using Redux Toolkit</li>
+    <li>Responsive, user-friendly interfaces using Tailwind CSS, Bootstrap</li>
+</ul>
+
+<p><strong>DevOps & Deployment:</strong></p>
+<ul>
+    <li>Containerization using Docker with ubantu OS for consistency across environments</li>
+    <!-- <li>Orchestrated deployments on Kubernetes</li> -->
+    <!-- <li>The real game-changer was the CI/CD pipeline automation—we went from 2-hour manual deployments to 15-minute automated ones using github action.</li> -->
+    <li>Implemented centralized logging and monitoring using the ELK Stack (Elasticsearch, Logstash, Kibana) for real-time system observability and issue tracking</li>
+    <li>Managed scaling, load balancing, and high availability</li>
+</ul>
+    
+    <br>
+    <hr>
+    <br>
+
+    
+</div>
                 </div>
             </div>
             
@@ -1926,11 +1976,11 @@
 </div>
                 
                 <div id="statusText" class="status-text">
-                    Ready to assist you!
+                    Space: Mic | Alt: Speaker | S: Screenshot | R: Reset | T: Type | M: Mini | F: Full | Ctrl+Shift+A: App | H: Controls :: Ready to assist you!
                     
                 </div>
                 <!-- <div style="font-size: 0.65rem; color: rgba(255, 255, 255, 0.422); margin-top: 4px;">
-                    Space: Mic | Alt: Speaker | S: Screenshot | R: Reset | T: Type | M: Mini | F: Full | Ctrl+Shift+A: App | H: Controls
+                    
                 </div> -->
             
             </div>
@@ -2168,7 +2218,7 @@ async function autoStopAndSend() {
     if (base64Audio && base64Audio.length > 100) {
         console.log('System audio captured, size:', base64Audio.length);
         addMessage('Processing speaker audio...', true);
-        ipcRenderer.send('audio-data', base64Audio);
+        ipcRenderer.send('audio-data', base64Audio, messages);
     } else {
         addMessage('No system audio captured.', false);
         updateStatus('Ready for your input!');
@@ -2272,7 +2322,7 @@ systemButton.addEventListener('click', async () => {
                             const base64Audio = reader.result.split(',')[1];
                             console.log('Sending audio, size:', base64Audio.length);
                             addMessage('Processing your voice...', true);
-                            ipcRenderer.send('audio-data', base64Audio);
+                            ipcRenderer.send('audio-data', base64Audio, messages);
                         };
                         reader.readAsDataURL(audioBlob);
                     } else {
@@ -2386,6 +2436,11 @@ systemButton.addEventListener('click', async () => {
             if (event.key === '2') {
                     event.preventDefault();
                     textInput.value = 'Solve the question';
+                    sendTextMessage();
+                    }
+            if (event.key === '3') {
+                    event.preventDefault();
+                    textInput.value = 'Solve the question in the chatbox where the cursor is now';
                     sendTextMessage();
                     }
 
@@ -2563,7 +2618,7 @@ document.addEventListener('keydown', (event) => {
                 }
             }
             
-            updateStatus('Ready for your next question!');
+            updateStatus('Ready for your next question! Alt: Speaker | S: Screenshot | R: Reset | T: Type | M: Mini | F: Full | Ctrl+Shift+A: App | H: Controls');
             isProcessingRequest = false;
             sendButton.disabled = false;
             textInput.disabled = false;
@@ -2597,8 +2652,11 @@ document.addEventListener('keydown', (event) => {
             textInput.focus();
             textInput.placeholder = 'Ask about the screenshot...';
             
-            // Store screenshot temporarily for next message
-            window.pendingScreenshot = screenshotData;
+            // Store screenshot in an array to support multiple screenshots
+            if (!window.pendingScreenshots) {
+               window.pendingScreenshots = [];
+            }
+            window.pendingScreenshots.push(screenshotData);
             
             isProcessingRequest = false;
             screenshotButton.disabled = false;
@@ -2612,7 +2670,7 @@ document.addEventListener('keydown', (event) => {
                 addMessage('Could not analyze screenshot. Please try again.', false);
             }
             
-            updateStatus('Ready for your next question!');
+            updateStatus('Ready for your next question! Alt: Speaker | S: Screenshot | R: Reset | T: Type | M: Mini | F: Full | Ctrl+Shift+A: App | H: Controls');
             isProcessingRequest = false;
             sendButton.disabled = false;
             textInput.disabled = false;
@@ -2638,22 +2696,24 @@ document.addEventListener('keydown', (event) => {
                 sendButton.disabled = true;
                 textInput.disabled = true;
                 
-                // Check if there's a pending screenshot
-                if (window.pendingScreenshot) {
-                    // Add user message with text
-                    addMessage(text, true);
-                    textInput.value = '';
-                    updateStatus('Analyzing screenshot...');
-                    
-                    // Send screenshot + text to main process
-                    ipcRenderer.send('screenshot-with-question', {
-                        screenshot: window.pendingScreenshot,
-                        question: text,
-                        history: messages 
-                    });
-                    
-                    delete window.pendingScreenshot;
-                    textInput.placeholder = 'Type your question here...';
+                
+            // Check if there are pending screenshots
+            if (window.pendingScreenshots && window.pendingScreenshots.length > 0) {
+                // Add user message with text
+                addMessage(text, true);
+                textInput.value = '';
+                updateStatus(`Analyzing ${window.pendingScreenshots.length} screenshot(s)...`);
+    
+                // Send ALL screenshots + text to main process
+                ipcRenderer.send('screenshot-with-question', {
+                    screenshots: window.pendingScreenshots, // Send array instead of single image
+                    question: text,
+                    history: messages 
+                });
+    
+                // Clear all screenshots
+                window.pendingScreenshots = [];
+                textInput.placeholder = 'Type your question here...';
                 } else {
                     // Regular text message
                     addMessage(text, true);

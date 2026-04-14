@@ -83,7 +83,7 @@ function createWindow() {
     icon: path.join(__dirname, isWindows ? 'assets/icons/icon.ico' : 'assets/icons/icon.png'),
     
      // CHANGED: Fully transparent background
-     backgroundColor: '#1e1e1e',
+     backgroundColor: '#000000',
      show: false,
     titleBarStyle: 'default',
     webPreferences: {
@@ -206,7 +206,7 @@ function createRecognizeStream() {
     })
 }
 
-ipcMain.on('toggle-recording', async (event, isStarting) => {
+ipcMain.on('toggle-recording', async (event, isStarting, history = []) => {
   if (answerDebounceTimer) {
     clearTimeout(answerDebounceTimer);
     answerDebounceTimer = null;
@@ -224,6 +224,7 @@ ipcMain.on('toggle-recording', async (event, isStarting) => {
     }
   } else {
     console.log('Stopping recording and generating answer');
+    console.log('Conversation history length:', Array.isArray(history) ? history.length : 'no history');
     isRecording = false;
     
     if (recognizeStream) {
@@ -241,7 +242,7 @@ ipcMain.on('toggle-recording', async (event, isStarting) => {
       if (currentTranscript && currentTranscript.trim().length > 0) {
         try {
           mainWindow.webContents.send('answer-status', 'Generating answer...');
-          await getGeminiAnswer(currentTranscript);
+          await getGeminiAnswer(currentTranscript, null, history);
         } catch (error) {
           console.error('Error generating answer:', error);
           if (mainWindow && !mainWindow.isDestroyed()) {
@@ -330,22 +331,29 @@ async function getGeminiAnswer(transcript, imageData = null, history = []) {
     const model = genAI.getGenerativeModel({ model: modelName });
 
    let result;
+
+
 if (imageData) {
   // ====================================
-  // IMAGE/SCREENSHOT ANALYSIS
+  // IMAGE/SCREENSHOT ANALYSIS - SUPPORTS MULTIPLE IMAGES
   // ====================================
-  const base64Data = imageData.replace(/^data:image\/\w+;base64,/, '');
-  let mimeType = 'image/png';
-  if (imageData.startsWith('data:image/jpeg') || imageData.startsWith('data:image/jpg')) mimeType = 'image/jpeg';
-  else if (imageData.startsWith('data:image/webp')) mimeType = 'image/webp';
-  else if (imageData.startsWith('data:image/gif')) mimeType = 'image/gif';
-
-  const imagePart = {
-    inlineData: { data: base64Data, mimeType }
-  };
+  const images = Array.isArray(imageData) ? imageData : [imageData];
+  
+  // Build image parts array for all screenshots
+  const imageParts = images.map(img => {
+    const base64Data = img.replace(/^data:image\/\w+;base64,/, '');
+    let mimeType = 'image/png';
+    if (img.startsWith('data:image/jpeg') || img.startsWith('data:image/jpg')) mimeType = 'image/jpeg';
+    else if (img.startsWith('data:image/webp')) mimeType = 'image/webp';
+    else if (img.startsWith('data:image/gif')) mimeType = 'image/gif';
+    
+    return {
+      inlineData: { data: base64Data, mimeType }
+    };
+  });
 
   const textPart = {
-    text: `You are an interview preparation assistant analyzing a screenshot.
+    text: `You are an interview preparation assistant analyzing ${images.length} screenshot(s).
 
 RESPONSE RULES:
 1. If it's a coding/DSA question: Provide FULL working Java code first in a code block
@@ -354,13 +362,14 @@ RESPONSE RULES:
 4. Add step-by-step explanation after code
 5. Use simple, speakable language
 6. End with "Key Points" summary
+${images.length > 1 ? '\n7. Analyze ALL screenshots provided and reference them when relevant' : ''}
 
 Question: ${finalQuestion}
 
 Provide complete code solution with detailed explanation.`
   };
 
-  result = await model.generateContent([textPart, imagePart]);
+  result = await model.generateContent([textPart, ...imageParts]);
 } else {
   // ====================================
   // TEXT-BASED QUESTIONS
@@ -392,38 +401,45 @@ const isInterviewQuestion = interviewKeywords.some(keyword =>
 
 ${isCodingProblem ? `
 CODING PROBLEM FORMAT (STRICT):
-1. **Approach/Algorithm** (2-3 bullet points explaining the logic)
-2. **Complete Working Java Code** (full solution in one code block)
-3. **Code Explanation** (explain key parts line-by-line)
-4. **Time & Space Complexity** (Big O notation)
-5. **Key Points to Remember** (2-3 takeaways)
+1. 🎯**Approach/Algorithm** (2-3 bullet points explaining the logic)
+2. 💻**Complete Working Java Code** (full solution in one code block)
+3. 📝 **Code Explanation** (explain key parts line-by-line)
+4. ⚡**Time & Space Complexity** (Big O notation)
+5. 🔑**Key Points to Remember** (2-3 takeaways)
 ` : ''}
 
 RESPONSE STYLE:
-- Write each bullet point as a COMPLETE SENTENCE that flows naturally when spoken
-- Use simple, everyday language - avoid jargon unless necessary
-- Structure everything in bullet points, but make each point feel like a full thought
+- Write each bullet point as a very short answer (no full sentence)
+- Structure everything in bullet points, no long points or paragraphs 
 - Bold (**text**) key terms for quick scanning
-- Keep it conversational and professional
+- Use icons for visual scanning
 
-CRITICAL RULES - MUST FOLLOW:
-- Write the answer AS IF THE CANDIDATE IS SPEAKING in first person
-- Use "I", "my", "mine" - NEVER "you", "your", "yours"
-- Wrong: "You put the code in a try block"
-- Correct: "I put the code in a try block"
-- Wrong: "You handle errors using..."
-- Correct: "I handle errors using..."
-
-LANGUAGE STYLE:
-- Use conversational words: "So" not "Therefore", "But" not "However", "Also" not "Moreover"
-- Use simple verbs: "Use" not "Utilize", "Start" not "Commence", "Show" not "Demonstrate"
-- Speak naturally: "I think it's better to..." not "It is recommended"
+COMPARISON FORMAT:
+If comparing 2+ things, use table:
+| Feature | Option A | Option B |
+|---------|----------|----------|
+|**Speed**|     Fast | Slow     |
 
 BULLET POINT RULES:
-- Each point should be 1-2 complete sentences (not just keywords)
-- Should read like someone speaking in an interview
-- Example: "Polymorphism means one method can behave in different ways depending on the object that calls it."
-- NOT: "Polymorphism - multiple forms"
+- Use icons: 💡 for concepts, ⚙️ for technical, 📊 for comparisons, ✅ for benefits, ❌ for drawbacks
+- Give me bullet points in very short answer format, not full sentences.
+- Format: **Bold Keyword** : short explanation
+- Example: "**Polymorphism** - one method, multiple behaviors"
+- NOT: "Polymorphism means one method can behave in different ways..."
+
+FORMATTING FOR QUICK SCANNING (CRITICAL):
+- Add "One line summary " tips with highliting at top in easy words
+- then after "One line summary" add important bullet points to tell in interview below
+- use "we" instead of "you" where possible
+- Use **bold** for ALL key technical terms, concepts, and important words
+- Use ━━---------- dividers between sections for clarity
+- Start with ONE LINE answer for interview (most important)
+- Structure each point as: **Key Term**: very short explanation
+- Example: "I use **try-catch blocks** to handle exceptions and prevent crashes."
+- Highlight numbers, percentages, and metrics in **bold**
+- Make the FIRST WORD of each bullet point **bold** for easy scanning
+- Use numbered lists (1, 2, 3...) instead of bullet points for better structure
+
 
 ${finalQuestion}
 
@@ -536,13 +552,17 @@ ipcMain.on('capture-screenshot', async (event) => {
 
 // Handle screenshot with question
 ipcMain.on('screenshot-with-question', async (event, data) => {
-  console.log('Received screenshot with question:', data.question);
+  console.log('Received screenshot(s) with question:', data.question);
   const history = data.history || [];
   
   if (mainWindow && !mainWindow.isDestroyed()) {
     try {
-      mainWindow.webContents.send('answer-status', 'Analyzing screenshot with Gemini...');
-      await getGeminiAnswer(data.question, data.screenshot, history);
+      mainWindow.webContents.send('answer-status', 'Analyzing screenshot(s) with Gemini...');
+      
+      // Handle both single screenshot (old format) and multiple screenshots (new format)
+      const screenshots = data.screenshots || [data.screenshot];
+      
+      await getGeminiAnswer(data.question, screenshots, history);
     } catch (error) {
       console.error('Error processing screenshot with question:', error);
       mainWindow.webContents.send('screenshot-answer', 'Error analyzing screenshot. Please try again.');
@@ -656,7 +676,7 @@ ipcMain.on('toggle-screen-sharing-mode', (event, isScreenSharing) => {
 });
 
 ipcMain.on('get-answer', async (event, transcript) => {
-  await getGeminiAnswer(transcript || currentTranscript)
+  await getGeminiAnswer(transcript || currentTranscript, null, [])
 })
 
 ipcMain.on('new-chat', () => {
@@ -687,7 +707,7 @@ ipcMain.on('recording-stopped', () => {
 })
 
 // Handle audio data from renderer process
-ipcMain.on('audio-data', async (event, base64Audio) => {
+ipcMain.on('audio-data', async (event, base64Audio, history = []) => {
   try {
     if (!base64Audio || base64Audio.length < 100) {
       mainWindow.webContents.send('answer', 'No audio received. Please try again.');
@@ -695,6 +715,7 @@ ipcMain.on('audio-data', async (event, base64Audio) => {
     }
 
     console.log('Received audio, size:', base64Audio.length);
+    console.log('Conversation history length:', Array.isArray(history) ? history.length : 'no history');
     mainWindow.webContents.send('answer-status', 'Transcribing audio...');
     
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
@@ -713,7 +734,7 @@ ipcMain.on('audio-data', async (event, base64Audio) => {
       mainWindow.webContents.send('transcript', transcript);
       currentTranscript = transcript;
       mainWindow.webContents.send('answer-status', 'Generating answer...');
-      await getGeminiAnswer(transcript);
+      await getGeminiAnswer(transcript, null, history);
     } else {
       mainWindow.webContents.send('answer', 'No speech detected. Please speak clearly and try again.');
     }

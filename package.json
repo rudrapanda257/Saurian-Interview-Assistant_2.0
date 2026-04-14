@@ -23,6 +23,7 @@
     "@google/generative-ai": "^0.24.1",
     "@ricky0123/vad-web": "^0.0.30",
     "axios": "^1.8.4",
+    "ffmpeg-static": "^5.2.0",
     "node-record-lpcm16": "^0.3.1",
     "openai": "^4.24.1"
   },
@@ -48,10 +49,7 @@
     },
     "win": {
       "icon": "assets/icons/icon.ico",
-      "target": [
-        "nsis",
-        "zip"
-      ]
+      "target": "portable"
     },
     "files": [
       "**/*",
@@ -61,14 +59,17 @@
       {
         "from": "lazy-job-seeker-4b29b-eb0b308d0ba7.json",
         "to": "lazy-job-seeker-4b29b-eb0b308d0ba7.json"
+      },
+      {
+        "from": "node_modules/ffmpeg-static",
+        "to": "ffmpeg-static"
       }
     ],
     "asarUnpack": [
       "node_modules/@google-cloud/text-to-speech/**/*",
       "node_modules/@google-cloud/speech/**/*",
-      "node_modules/node-record-lpcm16/**/*"
-    ],
-    "afterSign": "",
-    "publish": null
+      "node_modules/node-record-lpcm16/**/*",
+      "node_modules/ffmpeg-static/**/*"
+    ]
   }
 }
