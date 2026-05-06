@@ -14,6 +14,7 @@ const { globalShortcut } = require('electron');
 
 
 
+
 // Global variables
 let mainWindow = null
 let recording = null
@@ -37,7 +38,8 @@ let isInScreenSharingMode = false;
 // GOOGLE GEMINI API CONFIGURATION (FREE!)
 // Get your free API key from: https://aistudio.google.com/app/apikey
 // ============================================
-const GEMINI_API_KEY = ''; // ← PUT YOUR NEW API KEY HERE
+require('dotenv').config();
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY; // ← PUT YOUR NEW API KEY HERE
 
 
 
@@ -327,7 +329,7 @@ async function getGeminiAnswer(transcript, imageData = null, history = []) {
       mainWindow.webContents.send('answer-status', 'Generating answer.');
     }
 
-    const modelName = "gemini-2.0-flash";
+    const modelName = "gemini-2.5-flash";
     const model = genAI.getGenerativeModel({ model: modelName });
 
    let result;
@@ -377,15 +379,19 @@ Provide complete code solution with detailed explanation.`
   
   // Detect if it's an interview question
   const interviewKeywords = [
-  'interview', 'explain', 'difference between', 'what is', 
-  'how does', 'tell me about', 'describe', 'implement', 
+  'interview', 'explain', 'difference between', 'what is',
+  'how does', 'tell me about', 'describe', 'implement',
   'solve', 'algorithm', 'code', 'program', 'reverse', 'write',
   'find', 'search', 'sort', 'calculate', 'design', 'create',
-  'build', 'optimize', 'problem', 'question', 'approach'
+  'build', 'optimize', 'problem', 'question', 'approach',
+  'why should we', 'strength', 'weakness', 'challenge', 'yourself',
+  'experience', 'project', 'handle', 'situation', 'team', 'conflict',
+  'oops', 'oop', 'java', 'spring', 'database', 'sql', 'api', 'rest',
+  'microservice', 'thread', 'collection', 'exception', 'memory'
 ];
 
 // Check if it's a coding problem (needs full code solution)
-const codingProblemKeywords = ['solve', 'implement', 'write', 'code', 'reverse', 'find', 'search', 'sort', 'algorithm', 'problem'];
+const codingProblemKeywords = ['solve', 'implement', 'write', 'code', 'reverse', 'find', 'search', 'sort', 'algorithm', 'problem', 'array', 'string', 'linked list', 'tree', 'graph', 'dynamic', 'recursion', 'fibonacci', 'palindrome', 'anagram', 'duplicate', 'factorial', 'binary', 'stack', 'queue', 'hash'];
 const isCodingProblem = codingProblemKeywords.some(keyword => 
   finalQuestion.toLowerCase().includes(keyword)
 );
@@ -397,62 +403,71 @@ const isInterviewQuestion = interviewKeywords.some(keyword =>
   let systemPrompt;
   
   if (isInterviewQuestion) {
-  systemPrompt = `You are an interview preparation assistant. Help someone answer questions naturally and confidently.
+  systemPrompt = `You are an expert interview coach. Help answer questions naturally and confidently.
 
 ${isCodingProblem ? `
-CODING PROBLEM FORMAT (STRICT):
-1. 🎯**Approach/Algorithm** (2-3 bullet points explaining the logic)
-2. 💻**Complete Working Java Code** (full solution in one code block)
-3. 📝 **Code Explanation** (explain key parts line-by-line)
-4. ⚡**Time & Space Complexity** (Big O notation)
-5. 🔑**Key Points to Remember** (2-3 takeaways)
-` : ''}
+CODING FORMAT (STRICT):
+1. 🎯 **Approach** — 2-3 numbered points explaining logic
+2. 💻 **Java Code** — complete working solution in one code block
+3. 📝 **Explanation** — key lines only (not every line)
+4. ⚡ **Complexity** — Time & Space in Big O
+5. 🔑 **Key Takeaways** — 2-3 points to say out loud in interview
+` : `
+RESPONSE TEMPLATE (follow exactly):
+━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 **One-liner:** [ONE simple sentence — say this first]
+━━━━━━━━━━━━━━━━━━━━━━━━━
+Key Points (max 4):
+1. **Term**: short explanation
+2. **Term**: short explanation
+3. **Term**: short explanation
+━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 **Example** (if helpful): one real-world line only
+`}
 
-RESPONSE STYLE:
-- Write each bullet point as a very short answer (no full sentence)
-- Structure everything in bullet points, no long points or paragraphs 
-- Bold (**text**) key terms for quick scanning
-- Use icons for visual scanning
-
-COMPARISON FORMAT:
-If comparing 2+ things, use table:
+COMPARISON FORMAT (auto-use when comparing 2+ things):
 | Feature | Option A | Option B |
 |---------|----------|----------|
-|**Speed**|     Fast | Slow     |
+| **x**   | value    | value    |
 
-BULLET POINT RULES:
-- Use icons: 💡 for concepts, ⚙️ for technical, 📊 for comparisons, ✅ for benefits, ❌ for drawbacks
-- Give me bullet points in very short answer format, not full sentences.
-- Format: **Bold Keyword** : short explanation
-- Example: "**Polymorphism** - one method, multiple behaviors"
-- NOT: "Polymorphism means one method can behave in different ways..."
-
-FORMATTING FOR QUICK SCANNING (CRITICAL):
-- Add "One line summary " tips with highliting at top in easy words
-- then after "One line summary" add important bullet points to tell in interview below
-- use "we" instead of "you" where possible
-- Use **bold** for ALL key technical terms, concepts, and important words
-- Use ━━---------- dividers between sections for clarity
-- Start with ONE LINE answer for interview (most important)
-- Structure each point as: **Key Term**: very short explanation
-- Example: "I use **try-catch blocks** to handle exceptions and prevent crashes."
-- Highlight numbers, percentages, and metrics in **bold**
-- Make the FIRST WORD of each bullet point **bold** for easy scanning
-- Use numbered lists (1, 2, 3...) instead of bullet points for better structure
-
+STRICT RULES:
+- Max **150 words** for non-coding answers
+- Use numbered lists only — no bullet points
+- **Bold** every key technical term
+- First person: "I use...", "I prefer...", "I handle..."
+- NO full paragraphs, NO long sentences
+- Simple English — easy to speak out loud
 
 ${finalQuestion}
 
-Provide interview-ready answer with full sentences in bullet format.`;
+Short numbered answer. No full sentences.`;
 }else {
-    // ====================================
+        // ====================================
     // REGULAR CONVERSATIONAL PROMPT
     // ====================================
-    systemPrompt = `You are a helpful AI assistant. Be brief, natural, and use bullet points when helpful.
+    systemPrompt = `You are an expert interview coach helping answer technical and HR interview questions clearly.
 
-${finalQuestion}
+RESPONSE FORMAT (STRICT):
+━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 **One-liner:** [answer in ONE simple sentence — say this first in interview]
+━━━━━━━━━━━━━━━━━━━━━━━━━
+Key Points (max 4):
+1. **Term**: short explanation
+2. **Term**: short explanation
+3. **Term**: short explanation
+━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 **Example** (if helpful): one real-world line only
 
-Provide a clear, concise answer.`;
+STRICT RULES:
+- Max 120 words total
+- NO paragraphs, NO long sentences
+- **Bold** every key technical term
+- Use first person: "I use...", "I prefer...", "We achieve..."
+- If comparing 2+ things → use a table automatically
+- Simple English, easy to speak out loud
+
+${finalQuestion}`;
+
   }
   
   result = await model.generateContent(systemPrompt);
@@ -718,7 +733,7 @@ ipcMain.on('audio-data', async (event, base64Audio, history = []) => {
     console.log('Conversation history length:', Array.isArray(history) ? history.length : 'no history');
     mainWindow.webContents.send('answer-status', 'Transcribing audio...');
     
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     
     const result = await model.generateContent([
       { text: "Transcribe this audio exactly. Output ONLY the spoken words, nothing else. If no clear speech, respond with just: NO_SPEECH" },
