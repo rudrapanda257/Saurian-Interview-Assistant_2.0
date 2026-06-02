@@ -329,7 +329,10 @@ async function getGeminiAnswer(transcript, imageData = null, history = []) {
       mainWindow.webContents.send('answer-status', 'Generating answer.');
     }
 
-    const modelName = "gemini-2.5-flash";
+    //const modelName = "gemini-2.5-flash";
+    //gemini-3.1-pro
+    const modelName = "gemini-2.5-pro";
+
     const model = genAI.getGenerativeModel({ model: modelName });
 
    let result;
@@ -733,7 +736,8 @@ ipcMain.on('audio-data', async (event, base64Audio, history = []) => {
     console.log('Conversation history length:', Array.isArray(history) ? history.length : 'no history');
     mainWindow.webContents.send('answer-status', 'Transcribing audio...');
     
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
+    // gemini-2.5-flash
     
     const result = await model.generateContent([
       { text: "Transcribe this audio exactly. Output ONLY the spoken words, nothing else. If no clear speech, respond with just: NO_SPEECH" },

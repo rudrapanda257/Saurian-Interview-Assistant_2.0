@@ -1832,60 +1832,49 @@
                 <div class="message message-ai">
 <div class="message-content">
     <p>
-        Hello, I'm <strong>Rudra Narayan Panda</strong>, a Java Full-Stack Developer with over three years of experience building scalable enterprise applications. I'm currently at <strong>Capillary Technologies</strong> in Bengaluru, where I specialize in microservices architecture using Java, Spring Boot, and React.
+        Hello, I'm <strong>Rudra Narayan Panda</strong>, a Java Full-Stack Developer with over 4 years of experience building scalable enterprise applications. In my previous project, I worked on <strong>PayFlow</strong> — a real-time payment processing platform with an AI-based fraud detection system, developed for a digital banking startup in India.
     </p>
-    
+
     <br>
     <hr>
-     
 
-    
-        <!-- <h3>💼 CURRENT ROLE & EXPERTISE</h3>
-    <p>
-        At Capillary Technologies, I focus on developing robust, scalable solutions that drive real business value. My work revolves around microservices architecture, modern frontend frameworks, and building systems that can handle enterprise-scale demands.
-    </p> -->
-    
-    
     <h3>🚀 KEY PROJECT HIGHLIGHT</h3>
-<!-- <p>
-    In my current role, we <strong>architected and developed a enterprise project management platform from the ground up. </strong>. This was a comprehensive system designed to streamline project tracking, task management, and team collaboration at scale.
-</p> -->
 
-<p><strong>Microservices Architecture:</strong></p>
-<ul>
-    <li>Used different design partterns like <strong>Singleton Pattern</strong> while integrating microservices</li>
-    <li>Implemented <strong>Circuit Breaker</strong>to prevent cascading failures/fault tolerance in distributed systems</li>
-    <li>Implemented <strong>Asynchronous Communication</strong> using Apache Kafka</li>
-    <li><strong>Handles Distributed Transaction Scenario</strong> to achieve data consistency using SAGA patterns</li>
-    <li>reduced our API response times through query optimization, proper indexing, pagination and using Concurrent HashMap programming and implementing caching strategies.</li>
-</ul>
+    <p><strong>Microservices Architecture:</strong></p>
+    <ul>
+        <li>Worked across <strong>10+ microservices</strong> in a distributed payment ecosystem</li>
+        <li>Designed and implemented the <strong>Saga Choreography Pattern</strong> with a <strong>Transactional Outbox</strong> to guarantee exactly-once payment processing</li>
+        <li>Integrated <strong>Two-Layer Idempotency Key</strong> security check to handle duplicate payments — Redis cache (fast path) + PostgreSQL (durable fallback)</li>
+        <li>Implemented <strong>Cache-Aside technique using Redis</strong> for caching idempotency keys in transaction service and account balances in account service</li>
+        <li>Used <strong>Apache Kafka</strong> for async communication between multiple microservices in the Saga pattern</li>
+        <li>Added <strong>Circuit Breaker</strong> on Feign clients for inter-service communication — if the Gemini LLM is down, fallback returns zero AI score and payments continue with rule-only scoring</li>
+        <li>Applied <strong>SOLID, DRY</strong> principles across services and <strong>ACID</strong> principles for all database operations</li>
+    </ul>
 
-<p><strong>API Security:</strong></p>
-<ul>
-    <li>Secured over 40 RESTful APIs using JWT and spring security, to perform stateless authentication</li>
-</ul>
+    <p><strong>AI-Based Fraud Detection Service:</strong></p>
+    <ul>
+        <li>Built a <strong>hybrid scoring engine</strong> combining rule-based scores with a <strong>Google Gemini LLM</strong> AI fraud score using prompt engineering</li>
+        <li>Classifies every transaction into one of three categories: <strong>FRAUD_CLEARED</strong>, <strong>FRAUD_SUSPICIOUS</strong>, or <strong>FRAUD_DETECTED</strong></li>
+    </ul>
 
-<p><strong>Frontend Development:</strong></p>
-<ul>
-    <li>Built complex user interfaces with React.js & React Hooks</li>
-    <li>Responsive, user-friendly interfaces using Tailwind CSS, Bootstrap</li>
-    <li>Improved UI using lazy loading & Functional Components to reduce initial load time</li>
-</ul>
+    <p><strong>DevOps &amp; Deployment:</strong></p>
+    <ul>
+        <li>Wrote <strong>multi-stage Dockerfiles</strong> and <strong>Docker Compose</strong> files for containerization of transaction and fraud detection services</li>
+        <li>Deployed on <strong>AWS EKS</strong> with CI/CD pipeline automation using <strong>Jenkins</strong> and <strong>GitHub Actions</strong></li>
+        <li>Monitored application logs using <strong>Kibana</strong> and metrics using <strong>Prometheus &amp; Grafana</strong></li>
+        <li>Actively participated in <strong>PR reviews</strong> to maintain code quality and team standards</li>
+    </ul>
 
-<p><strong>DevOps & Deployment:</strong></p>
-<ul>
-    <li>Closely collaborated with DevOps team to streamline deployment processes</li>
-    <li>Focus more on improving high availability and scalability of our applications in producation</li>
-    <li>Containerization using Docker for consistency across environments</li>
-    
-    <li>I'm really excited about this engagement with Visa — it's a fintech domain I'm genuinely interested in, especially around building reliable and high-performance backend systems.</li>
-</ul>
-    
+    <p><strong>AI-Assisted Development &amp; Upskilling:</strong></p>
+    <ul>
+        <li>Actively use <strong>GitHub Copilot, Claude Code, and Cursor</strong> to improve development productivity</li>
+        <li>Currently expanding expertise in Gen AI & Agentic AI, learning <strong>LangChain, LangGraph, LangSmith, MCP Servers</strong>, and Multi-agent architectures</li>
+        <li>also Built a <strong>RAG-based application</strong> using Gemini LLM to answer queries over company internal documents — without exposing sensitive data to external AI platforms</li>
+    </ul>
+
     <br>
     <hr>
     <br>
-
-    
 </div>
                 </div>
             </div>
